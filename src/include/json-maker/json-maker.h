@@ -158,6 +158,16 @@ char* json_double( char* dest, char const* name, double value, size_t* remLen );
   * @return Pointer to the new end of JSON under construction. */
 char* json_fixed_3( char* dest, char const* name, double value, size_t* remLen );
 
+/** Add a fixed point number property with 3 decimal places in a JSON string.
+  * The 'value' parameter is considered to be the number to add as a floating
+  * point property multiplied by 1000.
+  * @param dest Pointer to the end of JSON string under construction.
+  * @param name Pointer to null-terminated string or null for an unnamed property.
+  * @param value The number to be added as a floating point property, multiplied by 1000.
+  * @param remLen Pointer to remaining length of dest.
+  * @return Pointer to the new end of JSON string under construction. */
+char* json_fixed_3_int( char* dest, char const* name, int value, size_t* remLen );
+
 /** @ } */
 
 #ifdef	__cplusplus
