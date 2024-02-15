@@ -150,6 +150,14 @@ char* json_verylong( char* dest, char const* name, long long int value, size_t* 
   * @return Pointer to the new end of JSON under construction. */
 char* json_double( char* dest, char const* name, double value, size_t* remLen );
 
+/** Add a fixed point number property with 3 decimal places in a JSON string.
+  * @param dest Pointer to the end of JSON under construction.
+  * @param name Pointer to null-terminated string or null for unnamed.
+  * @param value Value of the property, will be represented with 3 decimal places.
+  * @param remLen Pointer to remaining length of dest
+  * @return Pointer to the new end of JSON under construction. */
+char* json_fixed_3( char* dest, char const* name, double value, size_t* remLen );
+
 /** @ } */
 
 #ifdef	__cplusplus

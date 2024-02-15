@@ -284,11 +284,19 @@ ALL_TYPES
 ALL_TYPES
 #undef X
 
-char* json_double( char* dest, char const* name, double value ) {
-    return json_verylong( dest, name, value );
 char* json_double( char* dest, char const* name, double value, size_t* remLen ) {
     return json_verylong( dest, name, value, remLen );
 }
+
+char* json_fixed_3( char* dest, char const* name, double value, size_t* remLen ) {
+    int pre = (int) value;
+    int post = (int) ((value - (double)pre) * 1000.0);
+    dest = primitivename( dest, name, remLen );
+    dest = inttoa( dest, pre, remLen );
+    dest = chtoa( dest, '.', remLen );
+    dest = inttoa( dest, post < 0 ? -post : post, remLen );
+    dest = chtoa( dest, ',', remLen );
+    return dest;
 }
 
 #else
