@@ -320,6 +320,17 @@ char* json_fixed_3( char* dest, char const* name, double value, size_t* remLen )
     return dest;
 }
 
+char* json_fixed_3_int( char* dest, char const* name, int value, size_t* remLen ) {
+    int pre = value / 1000;
+    int post = value - (pre * 1000);
+    dest = primitivename( dest, name, remLen );
+    dest = inttoa( dest, pre, remLen );
+    dest = chtoa( dest, '.', remLen );
+    dest = inttoa( dest, post < 0 ? -post : post, remLen );
+    dest = chtoa( dest, ',', remLen );
+    return dest;
+}
+
 #else
 
 #include <stdio.h>
@@ -355,6 +366,20 @@ char* json_fixed_3( char* dest, char const* name, double value, size_t* remLen )
     int digitLen;
     int pre = (int) value;
     int post = (int) ((value - (double)pre) * 1000.0);
+    dest = primitivename( dest, name, remLen );
+    digitLen = snprintf( dest, *remLen, "%d.%u", pre, post < 0 ? -post : post );
+    if(digitLen >= (int)*remLen+1)
+        digitLen = (int)*remLen;
+    *remLen -= (size_t)digitLen;
+    dest += digitLen;
+    dest = chtoa( dest, ',', remLen );
+    return dest;
+}
+
+char* json_fixed_3_int( char* dest, char const* name, int value, size_t* remLen ) {
+    int digitLen;
+    int pre = (int) value;
+    int post = value - (pre * 1000);
     dest = primitivename( dest, name, remLen );
     digitLen = snprintf( dest, *remLen, "%d.%u", pre, post < 0 ? -post : post );
     if(digitLen >= (int)*remLen+1)
