@@ -246,10 +246,10 @@ static char* format( char* dest, int len, int isnegative ) {
 }
 
 #define numtoa( func, type, utype )         \
-static char* func( char* dest, type val ) { \
+static char* func( char* dest, type val, size_t* remLen   ) { \
     enum { base = 10 };                     \
     if ( 0 == val )                         \
-        return chtoa( dest, '0' );          \
+        return chtoa( dest, '0', remLen );          \
     int const isnegative = 0 > val;         \
     utype num = isnegative ? -val : val;    \
     int len = 0;                            \
@@ -262,10 +262,10 @@ static char* func( char* dest, type val ) { \
 }                                           \
 
 #define json_num( func, func2, type )                       \
-char* func( char* dest, char const* name, type value ) {    \
-    dest = primitivename( dest, name );                     \
-    dest = func2( dest, value );                            \
-    dest = chtoa( dest, ',' );                              \
+char* func( char* dest, char const* name, type value, size_t* remLen   ) {    \
+    dest = primitivename( dest, name, remLen );                     \
+    dest = func2( dest, value, remLen );                            \
+    dest = chtoa( dest, ',', remLen );                              \
     return dest;                                            \
 }                                                           \
 
@@ -286,6 +286,9 @@ ALL_TYPES
 
 char* json_double( char* dest, char const* name, double value ) {
     return json_verylong( dest, name, value );
+char* json_double( char* dest, char const* name, double value, size_t* remLen ) {
+    return json_verylong( dest, name, value, remLen );
+}
 }
 
 #else
@@ -318,5 +321,18 @@ char* funcname( char* dest, char const* name, type value, size_t* remLen  ) {   
 ALL_TYPES
 #undef X
 
+char* json_fixed_3( char* dest, char const* name, double value, size_t* remLen ) {
+    int digitLen;
+    int pre = (int) value;
+    int post = (int) ((value - (double)pre) * 1000.0);
+    dest = primitivename( dest, name, remLen );
+    digitLen = snprintf( dest, *remLen, "%d.%u", pre, post < 0 ? -post : post );
+    if(digitLen >= (int)*remLen+1)
+    	digitLen = (int)*remLen;
+    *remLen -= (size_t)digitLen;
+    dest += digitLen;
+    dest = chtoa( dest, ',', remLen );
+    return dest;
+}
 
 #endif
