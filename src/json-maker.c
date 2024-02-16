@@ -378,7 +378,7 @@ char* json_fixed_3( char* dest, char const* name, double value, size_t* remLen )
 
 char* json_fixed_3_int( char* dest, char const* name, int value, size_t* remLen ) {
     int digitLen;
-    int pre = (int) value;
+    int pre = value / 1000;
     int post = value - (pre * 1000);
     dest = primitivename( dest, name, remLen );
     digitLen = snprintf( dest, *remLen, "%d.%u", pre, post < 0 ? -post : post );
