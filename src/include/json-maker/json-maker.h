@@ -66,6 +66,21 @@ char* json_arrOpen( char* dest, char const* name, size_t* remLen );
   * @param remLen Pointer to remaining length of dest
   * @return Pointer to the new end of JSON under construction. */
 char* json_arrClose( char* dest, size_t* remLen );
+
+/**
+  * Open a string in a JSON string.
+  * @param dest Pointer to the end of JSON under construction.
+  * @param name Pointer to null-terminated string or null for unnamed.
+  * @param remLen Pointer to remaining length of dest
+  * @return Pointer to the new end of JSON under construction. */
+char* json_strOpen(char* dest, char const* name, size_t* remLen);
+
+/** Close a string in a JSON string.
+  * @param dest Pointer to the end of JSON under construction.
+  * @param remLen Pointer to remaining length of dest
+  * @return Pointer to the new end of JSON under construction. */
+char* json_strClose(char* dest, size_t* remLen);
+
 /** Add a text property in a JSON string.
   * @param dest Pointer to the end of JSON under construction.
   * @param name Pointer to null-terminated string or null for unnamed.

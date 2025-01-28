@@ -106,6 +106,23 @@ char* json_arrClose( char* dest, size_t* remLen  ) {
     return atoa( dest, "],", remLen );
 }
 
+/* Open a string in a JSON string. */
+char *json_strOpen(char *dest, const char *name, size_t *remLen) {
+    if ( NULL == name ) {
+        dest = chtoa(dest, '\"', remLen);
+    } else {
+        dest = chtoa( dest, '\"', remLen );
+        dest = atoa( dest, name, remLen );
+        dest = atoa( dest, "\":\"", remLen );
+    }
+    return dest;
+}
+
+/* Close a string in a JSON string. */
+char* json_strClose(char* dest, size_t* remLen) {
+    return atoa(dest, "\",", remLen);
+}
+
 /** Add the name of a text property.
   * @param dest Destination memory.
   * @param name The name of the property.
@@ -129,7 +146,7 @@ static int nibbletoch( int nibble ) {
   * @param ch Character source.
   * @return The escape character or null character if error. */
 static int escape( int ch ) {
-    int i;
+    unsigned int i;
     static struct { char code; char ch; } const pair[] = {
         { '\"', '\"' }, { '\\', '\\' }, { '/',  '/'  }, { 'b',  '\b' },
         { 'f',  '\f' }, { 'n',  '\n' }, { 'r',  '\r' }, { 't',  '\t' },
